@@ -9,11 +9,46 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import jwt from 'jsonwebtoken';
 import type { Request, Response, NextFunction } from 'express';
+import crypto from 'crypto';
 
 // Environment variables for Supabase configuration
 const SUPABASE_URL = process.env.SUPABASE_URL || '';
 const SUPABASE_KEY = process.env.SUPABASE_KEY || '';
-const JWT_SECRET = process.env.JWT_SECRET || 'deaf-auth-secret-key-change-in-production';
+
+// JWT Secret handling with security warning
+let JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  if (process.env.NODE_ENV === 'production') {
+    console.error('CRITICAL: JWT_SECRET is not set in production! Using random secret.');
+  } else {
+    console.warn('DeafAuth: JWT_SECRET not set. Using development fallback.');
+  }
+  // Generate a random secret for development/testing (will change on restart)
+  JWT_SECRET = crypto.randomBytes(32).toString('hex');
+}
+
+/**
+ * Supabase user metadata interface for type safety
+ */
+interface SupabaseUserMetadata {
+  username?: string;
+  is_deaf?: boolean;
+  prefer_asl?: boolean;
+  communication_preference?: 'asl' | 'text' | 'mixed';
+  asl_verified?: boolean;
+  accessibility_settings?: AccessibilitySettings;
+}
+
+/**
+ * Supabase user interface for type safety
+ */
+interface SupabaseUser {
+  id: string;
+  email?: string;
+  user_metadata?: SupabaseUserMetadata;
+  created_at: string;
+  last_sign_in_at?: string;
+}
 
 /**
  * DeafAuth user profile interface
@@ -560,7 +595,7 @@ class DeafAuthService {
   /**
    * Map Supabase user to DeafAuth user
    */
-  private mapSupabaseUser(supabaseUser: any): DeafAuthUser {
+  private mapSupabaseUser(supabaseUser: SupabaseUser): DeafAuthUser {
     const metadata = supabaseUser.user_metadata || {};
 
     return {

@@ -219,6 +219,41 @@ export function authRateLimiter(req: Request, res: Response, next: NextFunction)
 }
 
 /**
+ * General API rate limiter for authenticated routes
+ * More permissive than authRateLimiter but still provides protection
+ */
+const apiRequests: Map<string, { count: number; windowStart: number }> = new Map();
+const API_RATE_LIMIT = 100; // requests per window
+const API_RATE_WINDOW = 60 * 1000; // 1 minute window
+
+export function apiRateLimiter(req: Request, res: Response, next: NextFunction): void {
+  const ip = req.ip || req.socket.remoteAddress || 'unknown';
+  const now = Date.now();
+  const requestData = apiRequests.get(ip);
+
+  if (requestData) {
+    // Reset window if expired
+    if (now - requestData.windowStart > API_RATE_WINDOW) {
+      apiRequests.set(ip, { count: 1, windowStart: now });
+    } else if (requestData.count >= API_RATE_LIMIT) {
+      const remainingTime = Math.ceil((API_RATE_WINDOW - (now - requestData.windowStart)) / 1000);
+      res.status(429).json({
+        success: false,
+        message: `Rate limit exceeded. Please try again in ${remainingTime} seconds.`,
+        code: 'RATE_LIMITED',
+      });
+      return;
+    } else {
+      requestData.count++;
+    }
+  } else {
+    apiRequests.set(ip, { count: 1, windowStart: now });
+  }
+
+  next();
+}
+
+/**
  * Middleware to log authentication events
  */
 export function authLogger(req: AuthenticatedRequest, res: Response, next: NextFunction): void {
@@ -245,5 +280,6 @@ export default {
   requireASLVerified,
   checkASLPreference,
   authRateLimiter,
+  apiRateLimiter,
   authLogger,
 };

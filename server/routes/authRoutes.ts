@@ -17,15 +17,17 @@ import { deafAuthService, RegistrationData, LoginData } from '../services/deafAu
 import { 
   requireAuth, 
   optionalAuth, 
-  authRateLimiter, 
+  authRateLimiter,
+  apiRateLimiter,
   authLogger,
   AuthenticatedRequest 
 } from '../middleware/deafAuthMiddleware';
 
 const router = Router();
 
-// Apply auth logger to all routes
+// Apply auth logger and general API rate limiter to all routes
 router.use(authLogger);
+router.use(apiRateLimiter);
 
 /**
  * Registration schema validation

@@ -177,12 +177,7 @@ export function DeafAuthProvider({ children }: DeafAuthProviderProps) {
 
       if (response.ok && result.success) {
         setUser(result.user);
-        
-        // Store token in localStorage as backup
-        if (result.token) {
-          localStorage.setItem('deafauth_token', result.token);
-        }
-        
+        // Token is stored in httpOnly cookie by the server for security
         return true;
       } else {
         setError(result.message || 'Login failed');
@@ -218,12 +213,7 @@ export function DeafAuthProvider({ children }: DeafAuthProviderProps) {
 
       if (response.ok && result.success) {
         setUser(result.user);
-        
-        // Store token in localStorage as backup
-        if (result.token) {
-          localStorage.setItem('deafauth_token', result.token);
-        }
-        
+        // Token is stored in httpOnly cookie by the server for security
         return true;
       } else {
         setError(result.message || 'Registration failed');
@@ -254,16 +244,12 @@ export function DeafAuthProvider({ children }: DeafAuthProviderProps) {
         },
       });
 
-      // Clear user state
+      // Clear user state - cookie is cleared by server
       setUser(null);
-      
-      // Clear stored token
-      localStorage.removeItem('deafauth_token');
     } catch (err) {
       console.error('Logout error:', err);
       // Still clear user state even if logout request fails
       setUser(null);
-      localStorage.removeItem('deafauth_token');
     } finally {
       setLoading(false);
     }
@@ -286,11 +272,7 @@ export function DeafAuthProvider({ children }: DeafAuthProviderProps) {
 
       if (response.ok && result.success) {
         setUser(result.user);
-        
-        if (result.token) {
-          localStorage.setItem('deafauth_token', result.token);
-        }
-        
+        // Token is refreshed in httpOnly cookie by the server
         return true;
       }
       
