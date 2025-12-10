@@ -18,7 +18,7 @@ const router = Router();
 router.get('/properties', async (req, res) => {
   try {
     const filters = {
-      deafAccessible: req.query.deafAccessible === 'true',
+      deafAccessible: req.query.deafAccessible === 'true' ? true : req.query.deafAccessible === 'false' ? false : undefined,
       minBedrooms: req.query.minBedrooms ? parseInt(req.query.minBedrooms as string) : undefined,
       maxRent: req.query.maxRent ? parseFloat(req.query.maxRent as string) : undefined,
       city: req.query.city as string | undefined,
@@ -51,6 +51,9 @@ router.get('/properties/:id', async (req, res) => {
 // Create new property
 router.post('/properties', async (req, res) => {
   try {
+    // TODO: Add authentication check to verify user is authorized to create properties
+    // TODO: Add input validation for property data structure
+    
     const property = await propertyManagementService.createProperty(req.body);
     res.status(201).json({ success: true, data: property });
   } catch (error) {
@@ -237,6 +240,10 @@ router.get('/tenants/:tenantId/alerts/unacknowledged', async (req, res) => {
 // Create tenant
 router.post('/tenants', async (req, res) => {
   try {
+    // TODO: Add authentication and authorization checks
+    // Verify that only authorized landlords or property managers can create tenant records
+    // TODO: Add input validation for tenant data structure
+    
     const tenant = await propertyManagementService.createTenant(req.body);
     res.status(201).json({ success: true, data: tenant });
   } catch (error) {
@@ -280,6 +287,16 @@ router.post('/auth/register', async (req, res) => {
 router.post('/auth/login', async (req, res) => {
   try {
     const { username, password } = req.body;
+    
+    // Input validation
+    if (!username || typeof username !== 'string') {
+      return res.status(400).json({ success: false, error: 'Username is required and must be a string' });
+    }
+    
+    if (!password || typeof password !== 'string') {
+      return res.status(400).json({ success: false, error: 'Password is required and must be a string' });
+    }
+    
     const { user, session } = await deafAuthService.authenticate(username, password);
     res.json({ success: true, data: { user, session } });
   } catch (error) {
@@ -331,6 +348,28 @@ router.post('/auth/logout', async (req, res) => {
 router.post('/auth/verify', async (req, res) => {
   try {
     const { userId, verificationType, submittedData } = req.body;
+    
+    // Input validation
+    if (!userId || typeof userId !== 'string') {
+      return res.status(400).json({ success: false, error: 'userId is required and must be a string' });
+    }
+    
+    if (!verificationType || typeof verificationType !== 'string') {
+      return res.status(400).json({ success: false, error: 'verificationType is required and must be a string' });
+    }
+    
+    const validTypes = ['video-asl', 'community-vouching', 'document-upload', 'third-party'];
+    if (!validTypes.includes(verificationType)) {
+      return res.status(400).json({ 
+        success: false, 
+        error: `verificationType must be one of: ${validTypes.join(', ')}` 
+      });
+    }
+    
+    if (!submittedData || typeof submittedData !== 'object') {
+      return res.status(400).json({ success: false, error: 'submittedData is required and must be an object' });
+    }
+    
     const request = await deafAuthService.submitVerificationRequest(userId, verificationType, submittedData);
     res.status(201).json({ success: true, data: request });
   } catch (error) {
