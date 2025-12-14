@@ -208,7 +208,7 @@ export class BusinessMagicianService {
     }).returning();
 
     // Determine formation provider based on state
-    const provider = await this.selectFormationProvider(request.state);
+    await this.selectFormationProvider(request.state);
 
     return {
       formationId: newBusiness.id,
