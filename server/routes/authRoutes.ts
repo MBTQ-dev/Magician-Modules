@@ -13,7 +13,7 @@
 import { Router, Request, Response } from 'express';
 import { z } from 'zod';
 import { fromZodError } from 'zod-validation-error';
-import { deafAuthService, RegistrationData, LoginData } from '../services/deafAuthService';
+import deafAuthService, { RegistrationData, LoginData } from '../services/deafAuthService';
 import { 
   requireAuth, 
   optionalAuth, 
