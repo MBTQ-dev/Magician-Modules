@@ -1,4 +1,4 @@
-# 🌈 MBTQ.dev - AI-Powered Full-Stack Development Platform
+# 🌈 MBTQ.dev | AI-Powered Compliance and Workforce System 
 
 **A modular, production-ready reusable compliance and workflow system originally built to support deaf entrepreneurs, job seekers, developers, and creatives.**
 
