@@ -13,6 +13,7 @@ import {
   processBusineseAssistance,
   getBusinessAssistanceSchema
 } from '../middleware/aiManager';
+import crypto from 'crypto';
 
 const router = Router();
 
@@ -60,7 +61,7 @@ router.post('/translation/audio/init', (req, res) => {
     const validatedData = schema.parse(req.body);
     
     // Create a session ID for the translation
-    const sessionId = `translation_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+    const sessionId = `translation_${Date.now()}_${crypto.randomBytes(16).toString('hex')}`;
     
     res.json({
       sessionId,
