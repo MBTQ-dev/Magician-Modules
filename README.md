@@ -22,7 +22,7 @@
 
 ## 🌟 Overview
 
-The MBTQ.dev platform is a **reusable compliance and workflow system** originally built to support deaf entrepreneurs, job seekers, developers, and creatives. It provides battle-tested, modular components that any organization can integrate to handle:
+The MBTQ.dev has new features = Magician Modules is a **reusable compliance and workflow system** originally built to support deaf entrepreneurs, job seekers, developers, and creatives. It provides battle-tested, modular components that any organization can integrate to handle:
 
 - **Vocational Rehabilitation (VR) Compliance** - Complete 34 CFR Part 361 tracking and reporting
 - **Workforce Development** - WIOA-aligned program management and outcome tracking
