@@ -1,10 +1,10 @@
 # VR4Deaf Apps: Accessible VR Compliance & Workforce Platform
 
-**Part of the [MBTQ Platform](https://mbtq-dev.github.io/VR4Deaf-Apps/) ecosystem**
+**Flagship Cliet App  of the [MBTQ Platform](https://mbtq-dev.github.io/VR4Deaf-Apps/) ecosystem**
 
 A production-ready application for VR compliance tracking, workforce development, and accessibility-first services for the deaf community.
 
-## 🔷 MBTQ Platform Integration
+## 🔷 MBTQ Platform as foundational 
 
 This application integrates with the **MBTQ Platform** three-pillar architecture:
 
