@@ -186,6 +186,13 @@ router.post('/login', authRateLimiter, async (req: Request, res: Response) => {
  */
 router.post('/logout', optionalAuth, async (req: AuthenticatedRequest, res: Response) => {
   try {
+    if (!deafAuthService || typeof deafAuthService.logout !== 'function') {
+      console.error('deafAuthService.logout is not available');
+      return res.status(500).json({
+        success: false,
+        message: 'Logout service is unavailable. Please try again later.',
+      });
+    }
     const result = await deafAuthService.logout();
 
     // Clear the auth cookie
