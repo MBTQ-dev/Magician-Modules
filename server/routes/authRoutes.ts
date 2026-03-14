@@ -130,6 +130,13 @@ router.post('/login', authRateLimiter, async (req: Request, res: Response) => {
       password: validatedData.password,
     };
 
+    if (!deafAuthService || typeof deafAuthService.login !== 'function') {
+      res.status(500).json({
+        success: false,
+        message: 'Authentication service unavailable.',
+      });
+      return;
+    }
     const result = await deafAuthService.login(loginData);
 
     if (result.success) {
