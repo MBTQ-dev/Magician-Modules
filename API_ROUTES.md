@@ -2,7 +2,7 @@
 
 ## Base URL
 Development: `http://localhost:5000`
-Production: `https://360magicians.com
+Production: `https://vr4desf.org
 ## Core Routes
 
 ### Health & Status
